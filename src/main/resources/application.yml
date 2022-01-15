@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: Freelancer Expert System
+
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    password: pgpass
+  jpa:
+    generate-ddl: true
+    database: POSTGRESQL
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: 'true'
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      platform: postgres
+
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /
+
