@@ -18,12 +18,12 @@ class CustomerController(private val customerRepository: CustomerRepository) {
     @ResponseStatus(HttpStatus.OK)
     fun createCustomer(): ResponseEntity<Customer> {
         val customer = Customer(
-            email = "arif@gmail.com",
-            firstName = "Arif",
-            lastName = "Terzioğlu",
+            email = "xxxx",
+            firstName = "xxx",
+            lastName = "sss",
             password = "asdsa",
             phoneNumber = "5443455566",
-            address = "çayyolu"
+            address = "ss"
         )
 
         customerRepository.save(customer)
