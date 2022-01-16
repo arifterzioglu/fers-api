@@ -11,17 +11,19 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/customer")
-class CustomerController(private val userService: CustomerService){
+class CustomerController(private val userService: CustomerService) {
 
     @PostMapping("/create-customer")
     @ResponseStatus(HttpStatus.OK)
-    fun createCustomer(@RequestBody createCustomerRequest: CreateCustomerRequest): ResponseEntity<Customer> {
+    fun createCustomer(@RequestBody(required = true) createCustomerRequest: CreateCustomerRequest): ResponseEntity<Customer> {
         return ResponseEntity.ok(userService.createCustomer(createCustomerRequest))
     }
 
     @PutMapping("/edit-customer")
     @ResponseStatus(HttpStatus.OK)
-    fun updateCustomer(@RequestBody createCustomerRequest: CreateCustomerRequest): ResponseEntity<Customer> {
+    fun updateCustomer(@RequestBody(required = true) createCustomerRequest: CreateCustomerRequest): ResponseEntity<Customer> {
         return ResponseEntity.ok(userService.updateCustomer(createCustomerRequest))
     }
+
+    //freelancer statistics gibi score'u customer'ın altına koy
 }

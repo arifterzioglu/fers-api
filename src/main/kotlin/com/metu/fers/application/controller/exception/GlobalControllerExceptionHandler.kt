@@ -2,6 +2,7 @@ package com.metu.fers.application.controller.exception
 
 import com.metu.fers.domain.exception.CustomerAlreadyCreatedException
 import com.metu.fers.domain.exception.CustomerNotFoundException
+import com.metu.fers.domain.exception.ServiceAlreadyProvidedByFreelancer
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.slf4j.LoggerFactory
@@ -87,6 +88,17 @@ class GlobalControllerExceptionHandler(private val messageSource: MessageSource)
     fun handleCxSearchOrderNotFoundException(exception: CustomerNotFoundException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             additionalInfo = "CustomerNotFoundException",
+            false,
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "${exception.message} Parameters: ${exception.paramaters}"
+        )
+        return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(ServiceAlreadyProvidedByFreelancer::class)
+    fun handleCxSearchOrderNotFoundException(exception: ServiceAlreadyProvidedByFreelancer): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            additionalInfo = "ServiceAlreadyProvidedByFreelancer",
             false,
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             "${exception.message} Parameters: ${exception.paramaters}"

@@ -16,7 +16,9 @@ class FreelancerController(private val freelancerService: FreelancerService) {
 
     @PostMapping("/create-freelancer")
     @ResponseStatus(HttpStatus.OK)
-    fun createFreelancer(@RequestBody createFreelancerRequest: CreateFreelancerRequest): ResponseEntity<Freelancer> {
+    fun createFreelancer(@RequestBody(required = true) createFreelancerRequest: CreateFreelancerRequest): ResponseEntity<Freelancer> {
         return ResponseEntity.ok(freelancerService.createFreelancer(createFreelancerRequest))
     }
+
+    //freelancer statistics gibi score'u freelancer'ın altına koy
 }
