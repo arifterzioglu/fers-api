@@ -1,32 +1,27 @@
 package com.metu.fers.application.controller
 
+import com.metu.fers.application.service.CustomerService
 import com.metu.fers.domain.entity.Customer
+import com.metu.fers.domain.model.request.customer.CreateCustomerRequest
 import com.metu.fers.domain.model.response.reservation.CreateReservationResponse
 import com.metu.fers.repository.CustomerRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/customer")
-class CustomerController(private val customerRepository: CustomerRepository) {
+class CustomerController(private val userService: CustomerService){
 
-    @PostMapping("/create")
+    @PostMapping("/create-customer")
     @ResponseStatus(HttpStatus.OK)
-    fun createCustomer(): ResponseEntity<Customer> {
-        val customer = Customer(
-            email = "xxxx",
-            firstName = "xxx",
-            lastName = "sss",
-            password = "asdsa",
-            phoneNumber = "5443455566",
-            address = "ss"
-        )
+    fun createCustomer(@RequestBody createCustomerRequest: CreateCustomerRequest): ResponseEntity<Customer> {
+        return ResponseEntity.ok(userService.createCustomer(createCustomerRequest))
+    }
 
-        customerRepository.save(customer)
-        return ResponseEntity.ok(customer)
+    @PutMapping("/edit-customer")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateCustomer(@RequestBody createCustomerRequest: CreateCustomerRequest): ResponseEntity<Customer> {
+        return ResponseEntity.ok(userService.updateCustomer(createCustomerRequest))
     }
 }

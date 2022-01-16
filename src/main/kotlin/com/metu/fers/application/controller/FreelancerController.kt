@@ -1,20 +1,22 @@
 package com.metu.fers.application.controller
 
+import com.metu.fers.application.service.CustomerService
+import com.metu.fers.application.service.FreelancerService
+import com.metu.fers.domain.entity.Freelancer
+import com.metu.fers.domain.model.request.freelancer.CreateFreelancerRequest
 import com.metu.fers.domain.model.response.reservation.CreateReservationResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/freelancer")
-class FreelancerController {
+class FreelancerController(private val freelancerService: FreelancerService) {
 
-    @PostMapping("/create")
+
+    @PostMapping("/create-freelancer")
     @ResponseStatus(HttpStatus.OK)
-    fun createReservation(): ResponseEntity<CreateReservationResponse> {
-        return ResponseEntity.ok(CreateReservationResponse(id = "123"))
+    fun createFreelancer(@RequestBody createFreelancerRequest: CreateFreelancerRequest): ResponseEntity<Freelancer> {
+        return ResponseEntity.ok(freelancerService.createFreelancer(createFreelancerRequest))
     }
 }
