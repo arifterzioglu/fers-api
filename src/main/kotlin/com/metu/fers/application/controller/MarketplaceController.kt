@@ -56,6 +56,4 @@ class MarketplaceController(private val marketplaceService: MarketplaceService) 
     fun getServiceProviders(@RequestParam(required = true) serviceId: Int): ResponseEntity<List<GetServiceProviderResponse>>  {
         return ResponseEntity.ok(marketplaceService.getServiceProvidersByServiceId(serviceId))
     }
-
-    //get freelancer details for a specific service and freelancer
 }

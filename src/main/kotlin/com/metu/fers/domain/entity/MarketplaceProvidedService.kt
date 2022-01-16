@@ -23,7 +23,13 @@ open class MarketplaceProvidedService(
     open var price: Float? = null,
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "freelancer_id", referencedColumnName = "freelancer_id", insertable = false, updatable = false)
+    @JoinColumn(
+        name = "freelancer_id",
+        referencedColumnName = "freelancer_id",
+        insertable = false,
+        updatable = false,
+        nullable = false,
+    )
     open var freelancer: Freelancer? = null,
 )
 

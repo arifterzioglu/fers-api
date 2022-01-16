@@ -1,13 +1,10 @@
 package com.metu.fers.application.service
 
 import com.metu.fers.domain.entity.Customer
-import com.metu.fers.domain.entity.Freelancer
-import com.metu.fers.domain.model.request.customer.CreateCustomerRequest
-import com.metu.fers.repository.CustomerRepository
-import com.metu.fers.repository.FreelancerRepository
 import com.metu.fers.domain.exception.CustomerAlreadyCreatedException
 import com.metu.fers.domain.exception.CustomerNotFoundException
-import com.metu.fers.domain.model.request.freelancer.CreateFreelancerRequest
+import com.metu.fers.domain.model.request.customer.CreateCustomerRequest
+import com.metu.fers.repository.CustomerRepository
 import org.springframework.stereotype.Service
 
 @Service

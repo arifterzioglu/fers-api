@@ -27,5 +27,15 @@ open class Freelancer(
     open var phoneNumber: String? = null,
 
     @Column(name = "organization_id")
-    open var organizationId: UUID? = null
+    open var organizationId: UUID? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "organization_id",
+        referencedColumnName = "organization_id",
+        insertable = false,
+        updatable = false,
+        nullable = true,
+    )
+    open var freelancer: Organization? = null,
 )
