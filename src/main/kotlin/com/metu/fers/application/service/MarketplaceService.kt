@@ -4,7 +4,9 @@ import com.metu.fers.domain.entity.MarketplaceFreelancerService
 import com.metu.fers.domain.entity.MarketplaceProvidedService
 import com.metu.fers.domain.exception.ServiceAlreadyProvidedByFreelancer
 import com.metu.fers.domain.model.request.marketplace.NewMarketplaceServiceCreationRequest
+import com.metu.fers.domain.model.request.marketplace.ProvidedServiceDeletionRequest
 import com.metu.fers.domain.model.request.marketplace.ServiceProvisionRequest
+import com.metu.fers.domain.model.response.marketplace.GetServiceProviderResponse
 import com.metu.fers.domain.model.response.marketplace.GetServicesResponse
 import com.metu.fers.repository.ProvidedServiceRepository
 import com.metu.fers.repository.ServiceRepository
@@ -51,10 +53,31 @@ class MarketplaceService(
         return providedServiceRepository.save(
             MarketplaceProvidedService(
                 serviceId = serviceProvisionRequest.serviceId,
-                freelancerDescription = serviceProvisionRequest.freelancerDescription,
                 freelancerId = serviceProvisionRequest.freelancerId,
+                freelancerDescription = serviceProvisionRequest.freelancerDescription,
                 price = serviceProvisionRequest.price
             )
         )
+    }
+
+    fun removeProvidedService(providedServiceDeletionRequest: ProvidedServiceDeletionRequest) {
+        providedServiceRepository.deleteByServiceIdAndFreelancerId(
+            providedServiceDeletionRequest.serviceId,
+            providedServiceDeletionRequest.freelancerId
+        )
+    }
+
+    fun getServiceProvidersByServiceId(serviceId: Int): List<GetServiceProviderResponse> {
+        val servicesByServiceId = providedServiceRepository.findAllByServiceId(serviceId)
+        return servicesByServiceId.map {
+            GetServiceProviderResponse(
+                freelancerId = it.freelancerId!!,
+                firstname = it.freelancer!!.firstName!!,
+                lastname = it.freelancer!!.lastName!!,
+                organizationId = it.freelancer!!.organizationId,
+                freelancerDescription = it.freelancerDescription!!,
+                price = it.price!!
+            )
+        }
     }
 }

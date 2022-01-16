@@ -3,7 +3,9 @@ package com.metu.fers.application.controller
 import com.metu.fers.application.service.MarketplaceService
 import com.metu.fers.domain.entity.MarketplaceProvidedService
 import com.metu.fers.domain.model.request.marketplace.NewMarketplaceServiceCreationRequest
+import com.metu.fers.domain.model.request.marketplace.ProvidedServiceDeletionRequest
 import com.metu.fers.domain.model.request.marketplace.ServiceProvisionRequest
+import com.metu.fers.domain.model.response.marketplace.GetServiceProviderResponse
 import com.metu.fers.domain.model.response.marketplace.GetServicesResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -42,9 +44,18 @@ class MarketplaceController(private val marketplaceService: MarketplaceService) 
         return ResponseEntity.ok(marketplaceService.handleServiceProvisionRequest(serviceProvisionRequest))
     }
 
-    //Delete provided service
+    @DeleteMapping("/delete-provided-service")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteProvidedService(@RequestBody(required = true) providedServiceDeletionRequest: ProvidedServiceDeletionRequest): ResponseEntity<Any?> {
+        marketplaceService.removeProvidedService(providedServiceDeletionRequest)
+        return ResponseEntity.ok().build()
+    }
 
-    //get providers for a specific service
+    @GetMapping("/service-providers")
+    @ResponseStatus(HttpStatus.OK)
+    fun getServiceProviders(@RequestParam(required = true) serviceId: Int): ResponseEntity<List<GetServiceProviderResponse>>  {
+        return ResponseEntity.ok(marketplaceService.getServiceProvidersByServiceId(serviceId))
+    }
 
     //get freelancer details for a specific service and freelancer
 }
