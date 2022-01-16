@@ -9,7 +9,7 @@ import java.util.*
 class OrganizationService(
     private val freelancerRepository: FreelancerRepository
 ) {
-    //add organization
+    //TODO: add organization
     fun updateFreelancerOrganization(freelancerId: UUID, organizationId: UUID) {
         val freelancer = freelancerRepository.findById(freelancerId)
         if (freelancer.isEmpty) {
