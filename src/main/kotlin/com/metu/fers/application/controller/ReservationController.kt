@@ -11,10 +11,4 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/reservation")
 class ReservationController {
-
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.OK)
-    fun createReservation(): ResponseEntity<CreateReservationResponse> {
-        return ResponseEntity.ok(CreateReservationResponse(id = "123"))
-    }
 }

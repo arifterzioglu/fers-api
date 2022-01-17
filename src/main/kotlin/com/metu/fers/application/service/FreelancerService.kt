@@ -7,7 +7,10 @@ import com.metu.fers.repository.CustomerRepository
 import com.metu.fers.repository.FreelancerRepository
 import com.metu.fers.domain.exception.CustomerAlreadyCreatedException
 import com.metu.fers.domain.exception.CustomerNotFoundException
+import com.metu.fers.domain.exception.FreelancerNotFoundException
+import com.metu.fers.domain.exception.PasswordDoesNotMatchException
 import com.metu.fers.domain.model.request.freelancer.CreateFreelancerRequest
+import com.metu.fers.domain.model.request.freelancer.LogInFreelancerRequest
 import org.springframework.stereotype.Service
 
 @Service
@@ -30,5 +33,15 @@ class FreelancerService(
                 organizationId = createCustomerRequest.organizationId
             )
         )
+    }
+
+    fun login(logInCustomerRequest: LogInFreelancerRequest): Freelancer {
+        val freelancer =
+            freelancerRepository.findByEmail(logInCustomerRequest.email) ?: throw FreelancerNotFoundException()
+        if (!freelancer.password.equals(logInCustomerRequest.password)) {
+            throw PasswordDoesNotMatchException()
+        }
+
+        return freelancer
     }
 }

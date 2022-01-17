@@ -126,6 +126,16 @@ class GlobalControllerExceptionHandler(private val messageSource: MessageSource)
         return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
+    @ExceptionHandler(PasswordDoesNotMatchException::class)
+    fun handlePasswordDoesNotMatchException(exception: PasswordDoesNotMatchException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            additionalInfo = "PasswordDoesNotMatchException",
+            false,
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "${exception.message} Parameters: ${exception.paramaters}"
+        )
+        return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
 
     private fun prepareBindingResult(bindingResult: BindingResult, errorDTO: ErrorResponse) {
         bindingResult.fieldErrors.forEach(Consumer { i: FieldError ->

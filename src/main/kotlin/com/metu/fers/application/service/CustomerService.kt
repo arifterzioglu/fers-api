@@ -3,7 +3,10 @@ package com.metu.fers.application.service
 import com.metu.fers.domain.entity.Customer
 import com.metu.fers.domain.exception.CustomerAlreadyCreatedException
 import com.metu.fers.domain.exception.CustomerNotFoundException
+import com.metu.fers.domain.exception.PasswordDoesNotMatchException
 import com.metu.fers.domain.model.request.customer.CreateCustomerRequest
+import com.metu.fers.domain.model.request.customer.LogInCustomerRequest
+import com.metu.fers.domain.model.request.freelancer.LogInFreelancerRequest
 import com.metu.fers.repository.CustomerRepository
 import org.springframework.stereotype.Service
 
@@ -38,6 +41,15 @@ class CustomerService(
         customer.password = createCustomerRequest.password
 
         customerRepository.save(customer)
+
+        return customer
+    }
+
+    fun login(logInFreelancerRequest: LogInCustomerRequest): Customer {
+        val customer = customerRepository.findByEmail(logInFreelancerRequest.email) ?: throw CustomerNotFoundException()
+        if (!customer.password.equals(logInFreelancerRequest.password)) {
+            throw PasswordDoesNotMatchException()
+        }
 
         return customer
     }

@@ -12,9 +12,21 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/admin")
 class AdminOperationsController {
 
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.OK)
-    fun createReservation(): ResponseEntity<CreateReservationResponse> {
-        return ResponseEntity.ok(CreateReservationResponse(id = "123"))
-    }
+    //TODO: create admin
+
+    //GetAdminInfo
+
+    //Edit service
+
+    //delete service
+
+    //add user
+
+    //delete user
+
+    //add reservation
+
+    //edit reservation
+
+    //view freelancer statistics
 }

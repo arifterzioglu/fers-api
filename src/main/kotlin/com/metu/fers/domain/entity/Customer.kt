@@ -1,5 +1,6 @@
 package com.metu.fers.domain.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 
@@ -11,7 +12,7 @@ open class Customer(
     @Column(name = "customer_id")
     open var customerId: UUID? = null,
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     open var email: String? = null,
 
     @Column(name = "firstname")
@@ -21,6 +22,7 @@ open class Customer(
     open var lastName: String? = null,
 
     @Column(name = "password")
+    @JsonIgnore
     open var password: String? = null,
 
     @Column(name = "phone_number")

@@ -12,7 +12,7 @@ open class Freelancer(
     @Column(name = "freelancer_id")
     open var freelancerId: UUID? = null,
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     open var email: String? = null,
 
     @Column(name = "firstname")
@@ -22,6 +22,7 @@ open class Freelancer(
     open var lastName: String? = null,
 
     @Column(name = "password")
+    @JsonIgnore
     open var password: String? = null,
 
     @Column(name = "phone_number")

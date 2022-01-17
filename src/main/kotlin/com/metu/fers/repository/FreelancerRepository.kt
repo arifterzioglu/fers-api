@@ -11,4 +11,6 @@ interface FreelancerRepository : JpaRepository<Freelancer, UUID> {
     fun existsAllByEmail(
         email: String?,
     ): Boolean
+
+    fun findByEmail(email: String?): Freelancer?
 }
