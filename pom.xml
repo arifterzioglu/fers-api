@@ -14,7 +14,7 @@
     <name>fers</name>
     <description>Freelance Expert System</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>15</java.version>
         <kotlin.version>1.6.10</kotlin.version>
     </properties>
     <dependencies>
