@@ -21,9 +21,6 @@ spring:
     init:
       platform: postgres
 
-java:
-  runtime:
-    version: 15
 
 springdoc:
   api-docs:
