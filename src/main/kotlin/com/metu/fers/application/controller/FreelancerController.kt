@@ -29,5 +29,7 @@ class FreelancerController(private val freelancerService: FreelancerService) {
         return ResponseEntity.ok(freelancerService.login(logInCustomerRequest))
     }
 
-    //freelancer statistics gibi score'u freelancer'ın altına koy
+    //TODO: freelancer statistics gibi score'u freelancer'ın altına koy
+
+    //TODO: freelancerın available time slotlarını dönen endpoint
 }

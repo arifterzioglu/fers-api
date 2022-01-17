@@ -29,4 +29,6 @@ class AdminOperationsController {
     //edit reservation
 
     //view freelancer statistics
+
+    //login
 }
