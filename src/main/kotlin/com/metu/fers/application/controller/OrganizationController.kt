@@ -1,6 +1,9 @@
 package com.metu.fers.application.controller
 
 import com.metu.fers.application.service.OrganizationService
+import com.metu.fers.domain.entity.Freelancer
+import com.metu.fers.domain.entity.Organization
+import com.metu.fers.domain.model.request.organization.AddOrganizationRequest
 import com.metu.fers.domain.model.response.reservation.CreateReservationResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -11,8 +14,7 @@ import java.util.*
 @RequestMapping("/organization")
 class OrganizationController(private val organizationService: OrganizationService) {
 
-    //TODO: add freelancer
-    @PutMapping("/add-freelancer")
+    @PutMapping("/update-freelancer-organization")
     @ResponseStatus(HttpStatus.OK)
     fun updateFreelancerOrganization(
         @RequestParam(required = true) freelancerId: UUID,
@@ -22,8 +24,22 @@ class OrganizationController(private val organizationService: OrganizationServic
         return ResponseEntity.ok().build()
     }
 
-    //TODO: Get organizations
+    @PostMapping("/add-organization")
+    @ResponseStatus(HttpStatus.OK)
+    fun addOrganization(@RequestBody(required = true) addOrganizationRequest: AddOrganizationRequest): ResponseEntity<Any?> {
+        organizationService.addOrganization(addOrganizationRequest)
+        return ResponseEntity.ok().build()
+    }
 
+    @GetMapping("/organizations")
+    @ResponseStatus(HttpStatus.OK)
+    fun getOrganizations(): ResponseEntity<MutableList<Organization>?> {
+        return ResponseEntity.ok(organizationService.getOrganizations())
+    }
 
-    //TODO: Get organizations freelancers
+    @GetMapping("/organization-freelancers")
+    @ResponseStatus(HttpStatus.OK)
+    fun getOrganizationFreelancers(@RequestParam organizationId: UUID): ResponseEntity<MutableList<Freelancer?>?> {
+        return ResponseEntity.ok(organizationService.getOrganizationFreelancers(organizationId))
+    }
 }

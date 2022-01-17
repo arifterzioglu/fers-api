@@ -1,5 +1,6 @@
 package com.metu.fers.domain.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 
@@ -37,5 +38,6 @@ open class Freelancer(
         updatable = false,
         nullable = true,
     )
+    @JsonIgnore
     open var freelancer: Organization? = null,
 )

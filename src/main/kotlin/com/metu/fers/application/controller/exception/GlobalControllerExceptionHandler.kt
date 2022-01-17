@@ -1,8 +1,6 @@
 package com.metu.fers.application.controller.exception
 
-import com.metu.fers.domain.exception.CustomerAlreadyCreatedException
-import com.metu.fers.domain.exception.CustomerNotFoundException
-import com.metu.fers.domain.exception.ServiceAlreadyProvidedByFreelancer
+import com.metu.fers.domain.exception.*
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.slf4j.LoggerFactory
@@ -74,7 +72,7 @@ class GlobalControllerExceptionHandler(private val messageSource: MessageSource)
     }
 
     @ExceptionHandler(CustomerAlreadyCreatedException::class)
-    fun handleCxSearchOrderNotFoundException(exception: CustomerAlreadyCreatedException): ResponseEntity<ErrorResponse> {
+    fun handleCustomerAlreadyCreatedException(exception: CustomerAlreadyCreatedException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             additionalInfo = "CustomerAlreadyCreatedException",
             false,
@@ -85,7 +83,7 @@ class GlobalControllerExceptionHandler(private val messageSource: MessageSource)
     }
 
     @ExceptionHandler(CustomerNotFoundException::class)
-    fun handleCxSearchOrderNotFoundException(exception: CustomerNotFoundException): ResponseEntity<ErrorResponse> {
+    fun handleCustomerNotFoundException(exception: CustomerNotFoundException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             additionalInfo = "CustomerNotFoundException",
             false,
@@ -96,7 +94,7 @@ class GlobalControllerExceptionHandler(private val messageSource: MessageSource)
     }
 
     @ExceptionHandler(ServiceAlreadyProvidedByFreelancer::class)
-    fun handleCxSearchOrderNotFoundException(exception: ServiceAlreadyProvidedByFreelancer): ResponseEntity<ErrorResponse> {
+    fun handleServiceAlreadyProvidedByFreelancer(exception: ServiceAlreadyProvidedByFreelancer): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             additionalInfo = "ServiceAlreadyProvidedByFreelancer",
             false,
@@ -105,6 +103,29 @@ class GlobalControllerExceptionHandler(private val messageSource: MessageSource)
         )
         return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
     }
+
+    @ExceptionHandler(OrganizationAlreadyCreatedException::class)
+    fun handleOrganizationAlreadyCreatedException(exception: OrganizationAlreadyCreatedException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            additionalInfo = "OrganizationAlreadyCreatedException",
+            false,
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "${exception.message} Parameters: ${exception.paramaters}"
+        )
+        return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(OrganizationNotFoundException::class)
+    fun handleOrganizationNotFoundExceptionException(exception: OrganizationNotFoundException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            additionalInfo = "OrganizationNotFoundException",
+            false,
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "${exception.message} Parameters: ${exception.paramaters}"
+        )
+        return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
 
     private fun prepareBindingResult(bindingResult: BindingResult, errorDTO: ErrorResponse) {
         bindingResult.fieldErrors.forEach(Consumer { i: FieldError ->
