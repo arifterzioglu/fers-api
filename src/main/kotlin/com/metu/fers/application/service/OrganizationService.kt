@@ -18,12 +18,11 @@ class OrganizationService(
 ) {
     fun updateFreelancerOrganization(freelancerId: UUID, organizationId: UUID) {
         val freelancer = freelancerRepository.findById(freelancerId)
-        if (freelancer.isEmpty) {
-            throw FreelancerNotFoundException()
+        freelancer.ifPresentOrElse({ obj ->
+            obj.organizationId = organizationId
+            freelancerRepository.save(freelancer.get())
         }
-        freelancer.get().organizationId = organizationId
-
-        freelancerRepository.save(freelancer.get())
+        ) { throw FreelancerNotFoundException() }
     }
 
     fun addOrganization(addOrganizationRequest: AddOrganizationRequest) {
@@ -48,11 +47,12 @@ class OrganizationService(
     }
 
     fun getOrganizationFreelancers(organizationId: UUID): MutableList<Freelancer?>? {
+        var freelancerList: MutableList<Freelancer?>? = null
         val organizationOptional = organizationRepository.findById(organizationId)
-        if (organizationOptional.isEmpty) {
-            throw OrganizationNotFoundException()
+        organizationOptional.ifPresentOrElse({ obj ->
+            freelancerList = obj.freelancerList
         }
-
-        return organizationOptional.get().freelancerList
+        ) { throw OrganizationNotFoundException() }
+        return freelancerList
     }
 }
