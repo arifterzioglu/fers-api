@@ -33,7 +33,7 @@ class MarketplaceController(private val marketplaceService: MarketplaceService) 
 
     @DeleteMapping("/delete-service")
     @ResponseStatus(HttpStatus.OK)
-    fun deleteServices(@RequestParam(required = true) serviceName: String): ResponseEntity<Any?> {
+    fun deleteService(@RequestParam(required = true) serviceName: String): ResponseEntity<Any?> {
         marketplaceService.removeService(serviceName)
         return ResponseEntity.ok().build()
     }

@@ -1,5 +1,6 @@
 package com.metu.fers.application.controller.exception
 
+import com.metu.fers.domain.entity.Admin
 import com.metu.fers.domain.exception.*
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -130,6 +131,17 @@ class GlobalControllerExceptionHandler(private val messageSource: MessageSource)
     fun handlePasswordDoesNotMatchException(exception: PasswordDoesNotMatchException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             additionalInfo = "PasswordDoesNotMatchException",
+            false,
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "${exception.message} Parameters: ${exception.paramaters}"
+        )
+        return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(AdminNotFoundException::class)
+    fun handleAdminNotFoundException(exception: AdminNotFoundException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            additionalInfo = "AdminNotFoundException",
             false,
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             "${exception.message} Parameters: ${exception.paramaters}"
