@@ -12,4 +12,5 @@ interface CustomerRepository : JpaRepository<Customer, UUID> {
     ): Boolean
 
     fun findByEmail(email: String?): Customer?
+    fun deleteByEmail(customerEmail: String)
 }

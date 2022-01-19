@@ -13,4 +13,6 @@ interface FreelancerRepository : JpaRepository<Freelancer, UUID> {
     ): Boolean
 
     fun findByEmail(email: String?): Freelancer?
+
+    fun deleteByEmail(freelancerEmail: String)
 }

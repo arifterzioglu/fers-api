@@ -31,12 +31,4 @@ class AdminOperationsController(private val adminService: AdminService) {
     }
 
     //Edit service
-
-    //delete user(Customer, Freelancer)
-
-    //add reservation
-
-    //edit reservation
-
-    //view freelancer statistics
 }

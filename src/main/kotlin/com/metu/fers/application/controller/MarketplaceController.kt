@@ -2,6 +2,7 @@ package com.metu.fers.application.controller
 
 import com.metu.fers.application.service.MarketplaceService
 import com.metu.fers.domain.entity.MarketplaceProvidedService
+import com.metu.fers.domain.model.request.marketplace.MarketplaceServiceUpdateRequest
 import com.metu.fers.domain.model.request.marketplace.NewMarketplaceServiceCreationRequest
 import com.metu.fers.domain.model.request.marketplace.ProvidedServiceDeletionRequest
 import com.metu.fers.domain.model.request.marketplace.ServiceProvisionRequest
@@ -31,6 +32,16 @@ class MarketplaceController(private val marketplaceService: MarketplaceService) 
         return ResponseEntity.ok(marketplaceService.getServices())
     }
 
+    @PutMapping("/edit")
+    @ResponseStatus(HttpStatus.OK)
+    fun editService(
+        @RequestBody(required = true)
+        marketplaceServiceUpdateRequest: MarketplaceServiceUpdateRequest
+    ): ResponseEntity<Any?>? {
+        marketplaceService.editService(marketplaceServiceUpdateRequest)
+        return ResponseEntity.ok().build()
+    }
+
     @DeleteMapping("/delete-service")
     @ResponseStatus(HttpStatus.OK)
     fun deleteService(@RequestParam(required = true) serviceName: String): ResponseEntity<Any?> {
@@ -53,7 +64,7 @@ class MarketplaceController(private val marketplaceService: MarketplaceService) 
 
     @GetMapping("/service-providers")
     @ResponseStatus(HttpStatus.OK)
-    fun getServiceProviders(@RequestParam(required = true) serviceId: Int): ResponseEntity<List<GetServiceProviderResponse>>  {
+    fun getServiceProviders(@RequestParam(required = true) serviceId: Int): ResponseEntity<List<GetServiceProviderResponse>> {
         return ResponseEntity.ok(marketplaceService.getServiceProvidersByServiceId(serviceId))
     }
 }

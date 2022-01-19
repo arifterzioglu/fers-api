@@ -6,7 +6,6 @@ import com.metu.fers.domain.exception.CustomerNotFoundException
 import com.metu.fers.domain.exception.PasswordDoesNotMatchException
 import com.metu.fers.domain.model.request.customer.CreateCustomerRequest
 import com.metu.fers.domain.model.request.customer.LogInCustomerRequest
-import com.metu.fers.domain.model.request.freelancer.LogInFreelancerRequest
 import com.metu.fers.repository.CustomerRepository
 import org.springframework.stereotype.Service
 
@@ -43,6 +42,10 @@ class CustomerService(
         customerRepository.save(customer)
 
         return customer
+    }
+
+    fun deleteCustomer(customerEmail: String) {
+        customerRepository.deleteByEmail(customerEmail)
     }
 
     fun login(logInFreelancerRequest: LogInCustomerRequest): Customer {

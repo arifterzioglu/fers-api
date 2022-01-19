@@ -44,4 +44,8 @@ class FreelancerService(
 
         return freelancer
     }
+
+    fun deleteFreelancer(freelancerEmail: String) {
+        freelancerRepository.deleteByEmail(freelancerEmail)
+    }
 }

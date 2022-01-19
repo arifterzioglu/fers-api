@@ -3,6 +3,8 @@ package com.metu.fers.application.service
 import com.metu.fers.domain.entity.MarketplaceFreelancerService
 import com.metu.fers.domain.entity.MarketplaceProvidedService
 import com.metu.fers.domain.exception.ServiceAlreadyProvidedByFreelancer
+import com.metu.fers.domain.exception.ServiceNotFoundException
+import com.metu.fers.domain.model.request.marketplace.MarketplaceServiceUpdateRequest
 import com.metu.fers.domain.model.request.marketplace.NewMarketplaceServiceCreationRequest
 import com.metu.fers.domain.model.request.marketplace.ProvidedServiceDeletionRequest
 import com.metu.fers.domain.model.request.marketplace.ServiceProvisionRequest
@@ -79,5 +81,17 @@ class MarketplaceService(
                 price = it.price!!
             )
         }
+    }
+
+    fun editService(marketplaceServiceUpdateRequest: MarketplaceServiceUpdateRequest) {
+        val servicesByServiceId = serviceRepository.findById(marketplaceServiceUpdateRequest.serviceId!!)
+        if (servicesByServiceId.isEmpty) {
+            throw ServiceNotFoundException()
+        }
+
+        val service = servicesByServiceId.get()
+        service.description = marketplaceServiceUpdateRequest.description
+        service.serviceName = marketplaceServiceUpdateRequest.serviceName
+        serviceRepository.save(service)
     }
 }

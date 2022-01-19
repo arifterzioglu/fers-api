@@ -29,6 +29,12 @@ class FreelancerController(private val freelancerService: FreelancerService) {
         return ResponseEntity.ok(freelancerService.login(logInCustomerRequest))
     }
 
+    @DeleteMapping("/delete")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteCustomer(@RequestParam(required = true) freelancerEmail: String): ResponseEntity<Any?> {
+        return ResponseEntity.ok(freelancerService.deleteFreelancer(freelancerEmail))
+    }
+
     //TODO: freelancer statistics gibi score'u freelancer'ın altına koy
 
     //TODO: freelancerın available time slotlarını dönen endpoint

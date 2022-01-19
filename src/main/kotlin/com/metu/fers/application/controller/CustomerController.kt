@@ -4,8 +4,6 @@ import com.metu.fers.application.service.CustomerService
 import com.metu.fers.domain.entity.Customer
 import com.metu.fers.domain.model.request.customer.CreateCustomerRequest
 import com.metu.fers.domain.model.request.customer.LogInCustomerRequest
-import com.metu.fers.domain.model.response.reservation.CreateReservationResponse
-import com.metu.fers.repository.CustomerRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -30,6 +28,12 @@ class CustomerController(private val userService: CustomerService) {
     @ResponseStatus(HttpStatus.OK)
     fun login(@RequestBody(required = true) logInCustomerRequest: LogInCustomerRequest): ResponseEntity<Customer> {
         return ResponseEntity.ok(userService.login(logInCustomerRequest))
+    }
+
+    @DeleteMapping("/delete")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteCustomer(@RequestParam(required = true) customerEmail: String): ResponseEntity<Any?> {
+        return ResponseEntity.ok(userService.deleteCustomer(customerEmail))
     }
 
     //freelancer statistics gibi score'u customer'ın altına koy
