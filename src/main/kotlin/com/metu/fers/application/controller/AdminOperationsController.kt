@@ -18,7 +18,7 @@ class AdminOperationsController(private val adminService: AdminService) {
         return ResponseEntity.ok(adminService.createAdmin(createAdminRequest))
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/details")
     @ResponseStatus(HttpStatus.OK)
     fun getAdmin(@RequestParam(required = true) email: String): ResponseEntity<Admin> {
         return ResponseEntity.ok(adminService.getAdmin(email))
@@ -29,6 +29,4 @@ class AdminOperationsController(private val adminService: AdminService) {
     fun login(@RequestBody(required = true) logInAdminRequest: LogInAdminRequest): ResponseEntity<Admin> {
         return ResponseEntity.ok(adminService.login(logInAdminRequest))
     }
-
-    //Edit service
 }
