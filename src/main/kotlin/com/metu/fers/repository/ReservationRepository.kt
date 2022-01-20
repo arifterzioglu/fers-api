@@ -25,6 +25,13 @@ interface ReservationRepository : JpaRepository<Reservation, UUID> {
     @Query("select res from Reservation res where res.reservationDate >= :creationDateTime and res.freelancerId = :freelancerId")
     fun findAllWithReservationTimeAfterByFreelancerId(
         @Param("creationDateTime") creationDateTime: Timestamp?,
-        @Param("freelancerId") customerId: UUID
+        @Param("freelancerId") freelancerId: UUID
+    ): List<Reservation?>?
+
+    @Query("select res from Reservation res where res.reservationDate >= :startDate and res.reservationDate <= :endDate and res.freelancerId = :freelancerId")
+    fun findAllWithStartDateAndEndDateAndFreelancerId(
+        @Param("startDate") startDate: Timestamp,
+        @Param("endDate") endDate: Timestamp,
+        @Param("freelancerId") freelancerId: UUID
     ): List<Reservation?>?
 }
