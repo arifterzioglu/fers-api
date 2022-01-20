@@ -1,11 +1,12 @@
 package com.metu.fers.domain.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.sql.Timestamp
 import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "Freelancer")
+@Table(name = "Reservation")
 open class Reservation(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,6 +45,7 @@ open class Reservation(
         updatable = false,
         nullable = false,
     )
+    @JsonIgnore
     open var timeslot: Timeslot? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,6 +56,7 @@ open class Reservation(
         updatable = false,
         nullable = false,
     )
+    @JsonIgnore
     open var customer: Customer? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -64,6 +67,7 @@ open class Reservation(
         updatable = false,
         nullable = false,
     )
+    @JsonIgnore
     open var freelancer: Freelancer? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -74,5 +78,6 @@ open class Reservation(
         updatable = false,
         nullable = false,
     )
+    @JsonIgnore
     open var marketplaceFreelancerService: MarketplaceFreelancerService? = null,
 )
