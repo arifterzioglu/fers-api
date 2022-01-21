@@ -4,6 +4,7 @@ import com.metu.fers.application.service.FreelancerService
 import com.metu.fers.domain.entity.Freelancer
 import com.metu.fers.domain.model.request.freelancer.CreateFreelancerRequest
 import com.metu.fers.domain.model.request.freelancer.LogInFreelancerRequest
+import com.metu.fers.domain.model.request.freelancer.ScoreFreelancerRequest
 import com.metu.fers.domain.model.response.timeslot.AvailableTimeslotResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -39,5 +40,16 @@ class FreelancerController(private val freelancerService: FreelancerService) {
         return ResponseEntity.ok(freelancerService.getAvailableTimeslots(freelancerId))
     }
 
-    //TODO: freelancer statistics gibi score'u freelancer'ın altına koy
+    @GetMapping("/score")
+    @ResponseStatus(HttpStatus.OK)
+    fun getFreelancerScore(@RequestParam(required = true) freelancerId: UUID): ResponseEntity<Double> {
+        return ResponseEntity.ok(freelancerService.getFreelancerScore(freelancerId))
+    }
+
+    @PostMapping("/score")
+    @ResponseStatus(HttpStatus.OK)
+    fun scoreFreelancer(@RequestBody(required = true) scoreFreelancerRequest: ScoreFreelancerRequest): ResponseEntity<Any> {
+        freelancerService.scoreFreelancer(scoreFreelancerRequest)
+        return ResponseEntity.ok().build()
+    }
 }

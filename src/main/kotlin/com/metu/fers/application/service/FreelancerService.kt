@@ -1,6 +1,7 @@
 package com.metu.fers.application.service
 
 import com.metu.fers.domain.entity.Freelancer
+import com.metu.fers.domain.entity.FreelancerScore
 import com.metu.fers.domain.entity.Reservation
 import com.metu.fers.domain.entity.Timeslot
 import com.metu.fers.domain.exception.CustomerAlreadyCreatedException
@@ -8,12 +9,15 @@ import com.metu.fers.domain.exception.FreelancerNotFoundException
 import com.metu.fers.domain.exception.PasswordDoesNotMatchException
 import com.metu.fers.domain.model.request.freelancer.CreateFreelancerRequest
 import com.metu.fers.domain.model.request.freelancer.LogInFreelancerRequest
+import com.metu.fers.domain.model.request.freelancer.ScoreFreelancerRequest
 import com.metu.fers.domain.model.response.timeslot.AvailableTimeslotResponse
 import com.metu.fers.domain.model.response.timeslot.GetTimeslotResponse
 import com.metu.fers.repository.FreelancerRepository
+import com.metu.fers.repository.FreelancerScoreRepository
 import com.metu.fers.repository.ReservationRepository
 import com.metu.fers.repository.TimeslotRepository
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
 import java.sql.Timestamp
 import java.util.*
 import kotlin.streams.toList
@@ -24,6 +28,7 @@ class FreelancerService(
     private val freelancerRepository: FreelancerRepository,
     private val reservationRepository: ReservationRepository,
     private val timeslotRepository: TimeslotRepository,
+    private val freelancerScoreRepository: FreelancerScoreRepository,
 ) {
     fun createFreelancer(createCustomerRequest: CreateFreelancerRequest): Freelancer {
         val existsAllByEmail = freelancerRepository.existsAllByEmail(createCustomerRequest.email)
@@ -116,5 +121,30 @@ class FreelancerService(
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return Timestamp(calendar.timeInMillis)
+    }
+
+    fun getFreelancerScore(freelancerId: UUID): Double? {
+        val findAllByFreelancerId = freelancerScoreRepository.findAllByFreelancerId(freelancerId)
+        if (findAllByFreelancerId.isEmpty()) return 0.0
+        return findAllByFreelancerId.sumOf { it.score!! } / findAllByFreelancerId.size
+    }
+
+    fun scoreFreelancer(scoreFreelancerRequest: ScoreFreelancerRequest) {
+        if (freelancerScoreRepository.existsById(scoreFreelancerRequest.reservationId)) {
+            throw RuntimeException("Freelancer score already given for this reservation")
+        }
+        val reservation = reservationRepository.findById(scoreFreelancerRequest.reservationId)
+        if (reservation.isEmpty) {
+            throw RuntimeException("Reservation cannot be found")
+        }
+
+        freelancerScoreRepository.save(
+            FreelancerScore(
+                reservationId = scoreFreelancerRequest.reservationId,
+                customerId = reservation.get().customerId,
+                freelancerId = reservation.get().freelancerId,
+                score = scoreFreelancerRequest.score
+            )
+        )
     }
 }
