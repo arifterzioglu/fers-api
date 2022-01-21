@@ -1,9 +1,12 @@
 package com.metu.fers.domain.model.response.timeslot
 
-import com.metu.fers.domain.entity.Timeslot
-import java.sql.Timestamp
+data class AvailableTimeslotResponse(
+    val date: String,
+    val availableSlotList: List<GetTimeslotResponse>
+)
 
-class AvailableTimeslotResponse(
-    private val date: Timestamp,
-    private val availableSlotList: List<Timeslot>
+data class GetTimeslotResponse(
+    var timeslotId: Int? = null,
+    var startTime: String? = null,
+    var endTime: String? = null,
 )

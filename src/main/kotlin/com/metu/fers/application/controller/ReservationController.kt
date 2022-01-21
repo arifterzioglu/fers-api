@@ -26,13 +26,6 @@ class ReservationController(private val reservationService: ReservationService) 
         return ResponseEntity.ok(reservationService.createReservation(createReservationRequest))
     }
 
-    @PutMapping("/edit-reservation")
-    @ResponseStatus(HttpStatus.OK)
-    fun editReservation(@RequestBody(required = true) editReservationRequest: EditReservationRequest): ResponseEntity<Any?> {
-        reservationService.editReservation(editReservationRequest)
-        return ResponseEntity.ok().build()
-    }
-
     @DeleteMapping("/delete-reservation")
     @ResponseStatus(HttpStatus.OK)
     fun deleteReservation(@RequestParam(required = true) reservationId: UUID): ResponseEntity<Any?> {
@@ -50,5 +43,13 @@ class ReservationController(private val reservationService: ReservationService) 
     @ResponseStatus(HttpStatus.OK)
     fun getFreelancerReservations(@RequestParam(required = true) freelancerId: UUID): ResponseEntity<List<GetReservationResponse>>? {
         return ResponseEntity.ok(reservationService.getReservationsByFreelancerId(freelancerId))
+    }
+
+    //TODO: Bunu outbox table'ına at
+    @PutMapping("/edit-reservation")
+    @ResponseStatus(HttpStatus.OK)
+    fun editReservation(@RequestBody(required = true) editReservationRequest: EditReservationRequest): ResponseEntity<Any?> {
+        reservationService.editReservation(editReservationRequest)
+        return ResponseEntity.ok().build()
     }
 }

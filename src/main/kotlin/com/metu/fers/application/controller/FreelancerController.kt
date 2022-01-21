@@ -35,8 +35,7 @@ class FreelancerController(private val freelancerService: FreelancerService) {
 
     @GetMapping("/available-timeslots")
     @ResponseStatus(HttpStatus.OK)
-    @Deprecated("in development")
-    fun getAvailableTimeslots(@RequestParam(required = true) freelancerId: UUID): ResponseEntity<List<AvailableTimeslotResponse>> {
+    fun getAvailableTimeslots(@RequestParam(required = true) freelancerId: UUID): ResponseEntity<MutableList<AvailableTimeslotResponse>> {
         return ResponseEntity.ok(freelancerService.getAvailableTimeslots(freelancerId))
     }
 

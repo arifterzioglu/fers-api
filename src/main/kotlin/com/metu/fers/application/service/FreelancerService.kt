@@ -9,12 +9,14 @@ import com.metu.fers.domain.exception.PasswordDoesNotMatchException
 import com.metu.fers.domain.model.request.freelancer.CreateFreelancerRequest
 import com.metu.fers.domain.model.request.freelancer.LogInFreelancerRequest
 import com.metu.fers.domain.model.response.timeslot.AvailableTimeslotResponse
+import com.metu.fers.domain.model.response.timeslot.GetTimeslotResponse
 import com.metu.fers.repository.FreelancerRepository
 import com.metu.fers.repository.ReservationRepository
 import com.metu.fers.repository.TimeslotRepository
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.util.*
+import kotlin.streams.toList
 
 
 @Service
@@ -55,7 +57,7 @@ class FreelancerService(
         freelancerRepository.deleteByEmail(freelancerEmail)
     }
 
-    fun getAvailableTimeslots(freelancerId: UUID): List<AvailableTimeslotResponse>? {
+    fun getAvailableTimeslots(freelancerId: UUID): MutableList<AvailableTimeslotResponse>? {
         val findAllWithStartDateAndEndDateAndFreelancerId =
             reservationRepository.findAllWithStartDateAndEndDateAndFreelancerId(
                 addDaysToNow(1)!!,
@@ -69,7 +71,7 @@ class FreelancerService(
         for (i in 1..7) {
             val date = addDaysToNow(i)!!
             val availableTimeslotResponse = AvailableTimeslotResponse(
-                date = date,
+                date = date.toString(),
                 availableSlotList = getTimeslots(findAllWithStartDateAndEndDateAndFreelancerId, timeSlots, date)
             )
             availableTimeslotResponseList.add(availableTimeslotResponse)
@@ -79,11 +81,21 @@ class FreelancerService(
     }
 
     private fun getTimeslots(
-        findAllWithStartDateAndEndDateAndFreelancerId: List<Reservation?>?,
-        timeSlots: List<Timeslot>,
+        reservations: List<Reservation?>?,
+        timeslots: List<Timeslot>,
         date: Timestamp
-    ): List<Timeslot> {
-        TODO("Not yet implemented")
+    ): List<GetTimeslotResponse> {
+        val reservationList =
+            reservations!!.stream().filter { reservation -> isSameDay(date, reservation!!.reservationDate!!) }.toList()
+        return timeslots.stream().filter { timeslot ->
+            !reservationList.stream().anyMatch { reservation -> reservation!!.timeslotId == timeslot.timeslotId }
+        }.map {
+            GetTimeslotResponse(
+                timeslotId = it.timeslotId,
+                startTime = it.startTime,
+                endTime = it.endTime
+            )
+        }.toList()
     }
 
     private fun isSameDay(timestampOne: Timestamp, timestampTwo: Timestamp): Boolean {
