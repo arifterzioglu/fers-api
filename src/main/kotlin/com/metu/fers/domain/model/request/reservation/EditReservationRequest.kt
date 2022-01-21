@@ -7,4 +7,5 @@ class EditReservationRequest(
     val freelancerId: UUID,
     var timeslotId: Int,
     val reservationDate: String,
+    val requestOwner: String,
 )

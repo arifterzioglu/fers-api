@@ -3,6 +3,7 @@ package com.metu.fers.application.controller
 import com.metu.fers.application.service.ReservationService
 import com.metu.fers.domain.model.request.reservation.CreateReservationRequest
 import com.metu.fers.domain.model.request.reservation.EditReservationRequest
+import com.metu.fers.domain.model.request.reservation.UpdateReservationEditRequest
 import com.metu.fers.domain.model.request.timeslot.AddTimeslotRequest
 import com.metu.fers.domain.model.response.reservation.GetReservationResponse
 import org.springframework.http.HttpStatus
@@ -45,11 +46,17 @@ class ReservationController(private val reservationService: ReservationService) 
         return ResponseEntity.ok(reservationService.getReservationsByFreelancerId(freelancerId))
     }
 
-    //TODO: Bunu outbox table'ına at
-    @PutMapping("/edit-reservation")
+    @PostMapping("/edit-reservation-request")
     @ResponseStatus(HttpStatus.OK)
-    fun editReservation(@RequestBody(required = true) editReservationRequest: EditReservationRequest): ResponseEntity<Any?> {
-        reservationService.editReservation(editReservationRequest)
+    fun postReservationEditRequest(@RequestBody(required = true) editReservationRequest: EditReservationRequest): ResponseEntity<Any?> {
+        reservationService.postReservationEditRequest(editReservationRequest)
+        return ResponseEntity.ok().build()
+    }
+
+    @PutMapping("/update-edit-request")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateEditRequest(@RequestBody(required = true) updateReservationEditRequest: UpdateReservationEditRequest): ResponseEntity<Any?> {
+        reservationService.updateEditRequest(updateReservationEditRequest)
         return ResponseEntity.ok().build()
     }
 }

@@ -1,23 +1,29 @@
 package com.metu.fers.application.service
 
 import com.metu.fers.domain.entity.Reservation
+import com.metu.fers.domain.entity.ReservationUpdateOutbox
 import com.metu.fers.domain.entity.Timeslot
 import com.metu.fers.domain.model.request.reservation.CreateReservationRequest
 import com.metu.fers.domain.model.request.reservation.EditReservationRequest
+import com.metu.fers.domain.model.request.reservation.UpdateReservationEditRequest
 import com.metu.fers.domain.model.request.timeslot.AddTimeslotRequest
 import com.metu.fers.domain.model.response.reservation.*
 import com.metu.fers.repository.ReservationRepository
+import com.metu.fers.repository.ReservationUpdateOutboxRepository
 import com.metu.fers.repository.TimeslotRepository
 import org.springframework.stereotype.Service
+import java.lang.management.RuntimeMXBean
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.transaction.Transactional
 import kotlin.streams.toList
 
 @Service
 class ReservationService(
     private val timeslotRepository: TimeslotRepository,
-    private val reservationRepository: ReservationRepository
+    private val reservationRepository: ReservationRepository,
+    private val reservationUpdateOutboxRepository: ReservationUpdateOutboxRepository
 ) {
     fun addOrganization(addTimeslotRequest: AddTimeslotRequest) {
         timeslotRepository.save(
@@ -51,25 +57,87 @@ class ReservationService(
         return save.reservationId
     }
 
-    fun editReservation(editReservationRequest: EditReservationRequest) {
+    @Transactional
+    fun postReservationEditRequest(editReservationRequest: EditReservationRequest) {
         val dateFormat = SimpleDateFormat("dd.MM.yyyy")
         val parsedDate = dateFormat.parse(editReservationRequest.reservationDate)
         reservationRepository.findByFreelancerIdAndReservationDateAndTimeslotId(
             editReservationRequest.freelancerId,
             Timestamp(parsedDate.time),
             editReservationRequest.timeslotId
-        ).ifPresent { reservation -> throw RuntimeException("Freelancer already has a reservation in this time slot") }
+        ).ifPresent { throw RuntimeException("Freelancer already has a reservation in this time slot") }
 
         val reservation = reservationRepository.findById(editReservationRequest.reservationId)
         if (reservation.isEmpty) {
             throw RuntimeException("Reservation cannot be found")
         }
 
+        if (reservationUpdateOutboxRepository.existsByReservationIdAndApprovalStatus(
+                reservation.get().reservationId!!,
+                "PENDING"
+            )
+        ) {
+            throw RuntimeException("This reservation already has a waiting edit request!")
+        }
+
+        reservationUpdateOutboxRepository.save(
+            ReservationUpdateOutbox(
+                reservationId = reservation.get().reservationId,
+                requestedReservationDate = Timestamp(parsedDate.time),
+                requestedSlotId = editReservationRequest.timeslotId,
+                requestOwner = editReservationRequest.requestOwner,
+                approvalStatus = "PENDING",
+                requestCreatedDate = Timestamp(System.currentTimeMillis())
+            )
+        )
+    }
+
+    @Transactional
+    fun updateEditRequest(updateReservationEditRequest: UpdateReservationEditRequest) {
+        val updateRequest = reservationUpdateOutboxRepository.findById(updateReservationEditRequest.requestId)
+        if (updateRequest.isEmpty) {
+            throw RuntimeException()
+        }
+
+        if (!updateRequest.get().approvalStatus.equals(
+                "PENDING",
+                ignoreCase = true
+            )
+        ) {
+            throw RuntimeException(
+                String.format(
+                    "Request with id: %s is already %s",
+                    updateReservationEditRequest.requestId,
+                    updateRequest.get().approvalStatus.toString()
+                )
+            )
+        }
+
+        if (!updateReservationEditRequest.accepted) {
+            updateRequest.get().approvalStatus = "REJECTED"
+            reservationUpdateOutboxRepository.save(updateRequest.get())
+            return
+        }
+
+        reservationRepository.findByFreelancerIdAndReservationDateAndTimeslotId(
+            updateRequest.get().reservation!!.freelancerId!!,
+            updateRequest.get().requestedReservationDate!!,
+            updateRequest.get().requestedSlotId!!
+        ).ifPresent { throw RuntimeException("Freelancer already has a reservation in this date and time slot") }
+
+        val reservation = reservationRepository.findById(updateRequest.get().reservationId!!)
+        if (reservation.isEmpty) {
+            throw RuntimeException("Reservation could not be found")
+        }
+
         reservation.get().updatedDate = System.currentTimeMillis()
-        reservation.get().reservationDate = Timestamp(parsedDate.time)
-        reservation.get().timeslotId = editReservationRequest.timeslotId
+        reservation.get().reservationDate = updateRequest.get().requestedReservationDate
+        reservation.get().timeslotId = updateRequest.get().requestedSlotId
 
         reservationRepository.save(reservation.get())
+
+        updateRequest.get().approvalStatus = "APPROVED"
+        reservationUpdateOutboxRepository.save(updateRequest.get())
     }
 
     fun deleteReservation(reservationId: UUID) {
