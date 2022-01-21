@@ -12,7 +12,6 @@ import com.metu.fers.repository.ReservationRepository
 import com.metu.fers.repository.ReservationUpdateOutboxRepository
 import com.metu.fers.repository.TimeslotRepository
 import org.springframework.stereotype.Service
-import java.lang.management.RuntimeMXBean
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
