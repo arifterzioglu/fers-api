@@ -1,6 +1,8 @@
 package com.metu.fers.application.service
 
 import com.metu.fers.domain.entity.Freelancer
+import com.metu.fers.domain.entity.Reservation
+import com.metu.fers.domain.entity.Timeslot
 import com.metu.fers.domain.exception.CustomerAlreadyCreatedException
 import com.metu.fers.domain.exception.FreelancerNotFoundException
 import com.metu.fers.domain.exception.PasswordDoesNotMatchException
@@ -54,18 +56,37 @@ class FreelancerService(
     }
 
     fun getAvailableTimeslots(freelancerId: UUID): List<AvailableTimeslotResponse>? {
+        val findAllWithStartDateAndEndDateAndFreelancerId =
+            reservationRepository.findAllWithStartDateAndEndDateAndFreelancerId(
+                addDaysToNow(1)!!,
+                addDaysToNow(7)!!,
+                freelancerId
+            )
+
         val timeSlots = timeslotRepository.findAll()
 
-        reservationRepository.findAllWithStartDateAndEndDateAndFreelancerId(
-            addDaysToNow(1)!!,
-            addDaysToNow(7)!!,
-            freelancerId
-        )
+        val availableTimeslotResponseList: MutableList<AvailableTimeslotResponse> = mutableListOf()
+        for (i in 1..7) {
+            val date = addDaysToNow(i)!!
+            val availableTimeslotResponse = AvailableTimeslotResponse(
+                date = date,
+                availableSlotList = getTimeslots(findAllWithStartDateAndEndDateAndFreelancerId, timeSlots, date)
+            )
+            availableTimeslotResponseList.add(availableTimeslotResponse)
+        }
 
-        return emptyList()
+        return availableTimeslotResponseList
     }
 
-    fun isSameDay(timestampOne: Timestamp, timestampTwo: Timestamp): Boolean {
+    private fun getTimeslots(
+        findAllWithStartDateAndEndDateAndFreelancerId: List<Reservation?>?,
+        timeSlots: List<Timeslot>,
+        date: Timestamp
+    ): List<Timeslot> {
+        TODO("Not yet implemented")
+    }
+
+    private fun isSameDay(timestampOne: Timestamp, timestampTwo: Timestamp): Boolean {
         val cal1 = Calendar.getInstance()
         val cal2 = Calendar.getInstance()
         cal1.time = timestampOne

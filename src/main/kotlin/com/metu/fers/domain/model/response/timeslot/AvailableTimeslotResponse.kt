@@ -5,5 +5,5 @@ import java.sql.Timestamp
 
 class AvailableTimeslotResponse(
     private val date: Timestamp,
-    private val slotList: List<Timeslot>
+    private val availableSlotList: List<Timeslot>
 )
