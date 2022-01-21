@@ -86,7 +86,9 @@ class ReservationService(
                 requestedSlotId = editReservationRequest.timeslotId,
                 requestOwnerType = editReservationRequest.requestOwner,
                 approvalStatus = "PENDING",
-                requestCreatedDate = Timestamp(System.currentTimeMillis())
+                requestCreatedDate = Timestamp(System.currentTimeMillis()),
+                freelancerId = editReservationRequest.freelancerId,
+                customerId = editReservationRequest.customerId
             )
         )
     }
