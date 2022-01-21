@@ -35,6 +35,4 @@ class CustomerController(private val userService: CustomerService) {
     fun deleteCustomer(@RequestParam(required = true) customerEmail: String): ResponseEntity<Any?> {
         return ResponseEntity.ok(userService.deleteCustomer(customerEmail))
     }
-
-    //freelancer statistics gibi score'u customer'ın altına koy
 }
