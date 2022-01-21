@@ -84,7 +84,7 @@ class ReservationService(
                 reservationId = reservation.get().reservationId,
                 requestedReservationDate = Timestamp(parsedDate.time),
                 requestedSlotId = editReservationRequest.timeslotId,
-                requestOwner = editReservationRequest.requestOwner,
+                requestOwnerType = editReservationRequest.requestOwner,
                 approvalStatus = "PENDING",
                 requestCreatedDate = Timestamp(System.currentTimeMillis())
             )
@@ -162,6 +162,22 @@ class ReservationService(
         return mapReservations(findAllWithReservationTimeAfter)
     }
 
+    fun getWaitingEditReservationRequestsByFreelancerId(freelancerId: UUID): List<ReservationUpdateOutbox> {
+        return reservationUpdateOutboxRepository.findAllByFreelancerIdAndRequestOwnerTypeAndApprovalStatus(
+            freelancerId,
+            "CUSTOMER",
+            "PENDING"
+        )
+    }
+
+    fun getWaitingEditReservationRequestsByCustomerId(customerId: UUID): List<ReservationUpdateOutbox> {
+        return reservationUpdateOutboxRepository.findAllByCustomerIdAndRequestOwnerTypeAndApprovalStatus(
+            customerId,
+            "FREELANCER",
+            "PENDING"
+        )
+    }
+
     private fun mapReservations(findAllWithReservationTimeAfter: List<Reservation?>): List<GetReservationResponse> {
         return findAllWithReservationTimeAfter.stream().map {
             GetReservationResponse(
@@ -193,4 +209,5 @@ class ReservationService(
             )
         }.toList()
     }
+
 }

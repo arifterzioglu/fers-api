@@ -8,4 +8,14 @@ import java.util.*
 @Repository
 interface ReservationUpdateOutboxRepository : JpaRepository<ReservationUpdateOutbox, UUID> {
     fun existsByReservationIdAndApprovalStatus(reservationId: UUID, approvalStatus: String): Boolean
+
+    fun findAllByFreelancerIdAndRequestOwnerTypeAndApprovalStatus(
+        freelancerId: UUID, requestOwnerType: String,
+        approvalStatus: String
+    ): List<ReservationUpdateOutbox>
+
+    fun findAllByCustomerIdAndRequestOwnerTypeAndApprovalStatus(
+        freelancerId: UUID, requestOwnerType: String,
+        approvalStatus: String
+    ): List<ReservationUpdateOutbox>
 }

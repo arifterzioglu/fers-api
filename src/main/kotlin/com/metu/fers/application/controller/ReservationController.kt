@@ -1,6 +1,7 @@
 package com.metu.fers.application.controller
 
 import com.metu.fers.application.service.ReservationService
+import com.metu.fers.domain.entity.ReservationUpdateOutbox
 import com.metu.fers.domain.model.request.reservation.CreateReservationRequest
 import com.metu.fers.domain.model.request.reservation.EditReservationRequest
 import com.metu.fers.domain.model.request.reservation.UpdateReservationEditRequest
@@ -58,5 +59,29 @@ class ReservationController(private val reservationService: ReservationService) 
     fun updateEditRequest(@RequestBody(required = true) updateReservationEditRequest: UpdateReservationEditRequest): ResponseEntity<Any?> {
         reservationService.updateEditRequest(updateReservationEditRequest)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/freelancer-waiting-edit-reservation-requests")
+    @ResponseStatus(HttpStatus.OK)
+    fun getWaitingEditReservationRequestsByFreelancerId(
+        @RequestParam(required = true) freelancerId: UUID,
+    ): ResponseEntity<List<ReservationUpdateOutbox>> {
+        return ResponseEntity.ok(
+            reservationService.getWaitingEditReservationRequestsByFreelancerId(
+                freelancerId
+            )
+        )
+    }
+
+    @GetMapping("/customer-waiting-edit-reservation-requests")
+    @ResponseStatus(HttpStatus.OK)
+    fun getWaitingEditReservationRequestsByCustomerId(
+        @RequestParam(required = true) customerId: UUID,
+    ): ResponseEntity<List<ReservationUpdateOutbox>> {
+        return ResponseEntity.ok(
+            reservationService.getWaitingEditReservationRequestsByCustomerId(
+                customerId
+            )
+        )
     }
 }

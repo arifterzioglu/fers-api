@@ -17,6 +17,12 @@ open class ReservationUpdateOutbox(
     @Column(name = "reservation_id")
     open var reservationId: UUID? = null,
 
+    @Column(name = "customer_id")
+    open var customerId: UUID? = null,
+
+    @Column(name = "freelancer_id")
+    open var freelancerId: UUID? = null,
+
     @Column(name = "requested_reservation_date")
     open var requestedReservationDate: Timestamp? = null,
 
@@ -24,7 +30,7 @@ open class ReservationUpdateOutbox(
     open var requestedSlotId: Int? = null,
 
     @Column(name = "request_owner")
-    open var requestOwner: String? = null,
+    open var requestOwnerType: String? = null,
 
     @Column(name = "approval_status")
     open var approvalStatus: String? = null,
@@ -53,4 +59,26 @@ open class ReservationUpdateOutbox(
     )
     @JsonIgnore
     open var timeslot: Timeslot? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "customer_id",
+        referencedColumnName = "customer_id",
+        insertable = false,
+        updatable = false,
+        nullable = false,
+    )
+    @JsonIgnore
+    open var customer: Customer? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "freelancer_id",
+        referencedColumnName = "freelancer_id",
+        insertable = false,
+        updatable = false,
+        nullable = false,
+    )
+    @JsonIgnore
+    open var freelancer: Freelancer? = null,
 )
