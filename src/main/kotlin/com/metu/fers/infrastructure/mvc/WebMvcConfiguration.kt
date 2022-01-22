@@ -10,6 +10,7 @@ class WebMvcConfiguration : WebMvcConfigurer {
         registry.addMapping("/**")
             .allowedHeaders("Access-Control-Allow-Origin")
             .allowedOriginPatterns("*")
+            .allowCredentials(true)
             .allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS", "PATCH")
             .maxAge(3600)
     }
