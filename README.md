@@ -1,4 +1,4 @@
-# fers-api
+# fers-api (Freelancer Expert System)
 In order to run postgre locally, you can use postgre docker image.
     You have to install Docker before
     Change to directory where `docker-compose.yml` file resides.
