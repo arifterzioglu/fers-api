@@ -16,6 +16,10 @@ interface ReservationRepository : JpaRepository<Reservation, UUID> {
         timeslotId: Int
     ): Optional<Reservation>
 
+    fun findAllByCustomerId(customerId: UUID): List<Reservation?>?
+
+    fun findAllByFreelancerId(freelancerId: UUID): List<Reservation?>?
+
     @Query("select res from Reservation res where res.reservationDate >= :creationDateTime and res.customerId = :customerId")
     fun findAllWithReservationTimeAfter(
         @Param("creationDateTime") creationDateTime: Timestamp?,

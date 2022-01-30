@@ -147,8 +147,7 @@ class ReservationService(
 
     fun getReservationsByCustomerId(customerId: UUID): List<GetReservationResponse>? {
         val findAllWithReservationTimeAfter =
-            reservationRepository.findAllWithReservationTimeAfter(
-                Timestamp(System.currentTimeMillis()),
+            reservationRepository.findAllByCustomerId(
                 customerId
             )
                 ?: emptyList()
@@ -157,8 +156,7 @@ class ReservationService(
 
     fun getReservationsByFreelancerId(freelancerId: UUID): List<GetReservationResponse>? {
         val findAllWithReservationTimeAfter =
-            reservationRepository.findAllWithReservationTimeAfterByFreelancerId(
-                Timestamp(System.currentTimeMillis()),
+            reservationRepository.findAllByFreelancerId(
                 freelancerId
             ) ?: emptyList()
         return mapReservations(findAllWithReservationTimeAfter)
